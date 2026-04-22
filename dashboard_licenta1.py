@@ -153,9 +153,12 @@ def col(comp):
 # ── DATA ───────────────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False)
 def load_data():
-    raw = yf.download(list(COMPANII.values()), start=START, end=END, auto_adjust=True, progress=False)
+    tickers = list(COMPANII.values())
+    raw = yf.download(tickers, start=START, end=END, auto_adjust=True, progress=False)
     df = raw["Close"].copy()
-    df.columns = list(COMPANII.keys())
+    # yfinance returns columns in alphabetical order — map by ticker name, not position
+    ticker_to_name = {v: k for k, v in COMPANII.items()}
+    df.columns = [ticker_to_name[t] for t in df.columns]
     df.index = pd.to_datetime(df.index)
     return df.dropna(how="all")
 
