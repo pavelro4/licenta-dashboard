@@ -365,7 +365,7 @@ with t3:
             if comp not in df_b.columns:
                 continue
             fig2.add_trace(go.Scatter(
-                x=df_b.index.astype(str), y=df_b[comp].round(3),
+                x=df_b.index.astype(str), y=pd.to_numeric(df_b[comp], errors="coerce").round(3),
                 mode="lines+markers", name=comp,
                 line=dict(color=col(comp), width=1.8),
                 marker=dict(size=5, symbol="square"),
